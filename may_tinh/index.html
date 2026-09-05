@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy Tính Simple</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0f2fe, #f8fafc);
+            font-family: Arial, sans-serif;
+        }
+
+        .calculator {
+            width: min(92vw, 420px);
+            background: hsl(306, 75%, 78%);
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            padding: 18px;
+        }
+
+        .screen {
+            background: #89c7eb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 16px;
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            font-weight: bold;
+            color: #111827;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 18px 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.96;
+        }
+
+        .num {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .op {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .equal {
+            background: #22c55e;
+            color: white;
+        }
+
+        .clear {
+            background: #fca5a5;
+            color: #7f1d1d;
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 14px;
+                border-radius: 14px;
+            }
+
+            .btn {
+                padding: 16px 8px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="may_tinh">
+        <div id="man_hinh" class="screen">0</div>
+
+        <div class="buttons">
+            <button class="btn clear" data-value="clear">C</button>
+            <button class="btn op" data-value="/">/</button>
+            <button class="btn op" data-value="*">×</button>
+            <button class="btn op" data-value="-">-</button>
+
+            <button class="btn num" data-value="7">7</button>
+            <button class="btn num" data-value="8">8</button>
+            <button class="btn num" data-value="9">9</button>
+            <button class="btn op" data-value="+">+</button>
+
+            <button class="btn num" data-value="4">4</button>
+            <button class="btn num" data-value="5">5</button>
+            <button class="btn num" data-value="6">6</button>
+            <button class="btn equal" data-value="=">=</button>
+
+            <button class="btn num" data-value="1">1</button>
+            <button class="btn num" data-value="2">2</button>
+            <button class="btn num" data-value="3">3</button>
+            <button class="btn num" data-value="0">0</button>
+
+            <button class="btn num" data-value="." style="grid-column: span 4;">.</button>
+        </div>
+    </div>
+
+    <script>
+        const man_hinh = document.getElementById('man_hinh');
+        let bieu_thuc = '0';
+
+        function cap_nhat_man_hinh() {
+            man_hinh.innerText = bieu_thuc;
+        }
+
+        document.querySelectorAll('.btn').forEach(function (nut) {
+            nut.addEventListener('click', function () {
+                const gia_tri = nut.dataset.value;
+
+                if (gia_tri === 'clear') {
+                    bieu_thuc = '0';
+                    cap_nhat_man_hinh();
+                    return;
+                }
+
+                if (gia_tri === '=') {
+                    try {
+                        const ket_qua = Function('return (' + bieu_thuc + ');')();
+                        bieu_thuc = String(ket_qua);
+                    } catch (error) {
+                        bieu_thuc = '0';
+                    }
+                    cap_nhat_man_hinh();
+                    return;
+                }
+
+                if (bieu_thuc === '0' && /[0-9]/.test(gia_tri)) {
+                    bieu_thuc = gia_tri;
+                } else {
+                    bieu_thuc += gia_tri;
+                }
+
+                cap_nhat_man_hinh();
+            });
+        });
+    </script>
+</body>
+</html>

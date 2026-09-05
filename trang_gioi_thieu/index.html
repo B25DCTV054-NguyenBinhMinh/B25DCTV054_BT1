@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Giới Thiệu</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+            transition: background-color 0.3s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px 24px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        header {
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 0 0 10px;
+            color: #111827;
+        }
+
+        #gioi_thieu {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f766e;
+            margin: 8px 0 16px;
+        }
+
+        #btn-doi-mau {
+            border: none;
+            border-radius: 10px;
+            background: #111827;
+            color: #fff;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        #btn-doi-mau:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        main {
+            display: grid;
+            gap: 22px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 14px;
+            padding: 20px 22px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: #1f2937;
+        }
+
+        p, li {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0 30px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px 12px;
+                padding: 20px 16px;
+            }
+
+            h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Trang giới thiệu bản thân</h1>
+            <p id="gioi_thieu"></p>
+            <button id="btn-doi-mau" type="button">Đổi màu nền</button>
+        </header>
+
+        <main>
+            <section id="about">
+                <h2>Giới thiệu</h2>
+                <p>Xin chào! Tôi là Nguyễn Bình Minh, sinh viên năm 2 ngành Trí tuệ nhân tạo vạn vật (AIoT) tại Học viện Công nghệ Bưu chính Viễn thông.</p>
+                <p>Mã sinh viên: B25DCTV054</p>
+                <p>Lớp hành chính: D25CQTV02-B</p>
+            </section>
+
+            <section id="hobbies">
+                <h2>Sở thích</h2>
+                <ul>
+                    <li>Chơi game</li>
+                    <li>Nghe nhạc</li>
+                    <li>Xem phim</li>
+                    <li>Đi ngủ</li>
+                </ul>
+            </section>
+
+            <section id="contact">
+                <h2>Liên hệ</h2>
+                <p>Số điện thoại: 0376337563</p>
+                <p>Email: Minhnb.b25tv054@stu.ptit.edu.vn</p>
+            </section>
+        </main>
+    </div>
+    <footer>
+    <p>© 2026 - Trang cá nhân của Bình Minh</p>
+    </footer>
+
+    <script>
+        const greetingEl = document.getElementById("gioi_thieu");
+        const current_time = new Date();
+        const current_hour = current_time.getHours();
+        let loi_chao = "";
+
+        if (current_hour < 12) {
+            loi_chao = "Chào buổi sáng! Chúc bạn một ngày mới tốt lành.";
+        } else if (current_hour < 18) {
+            loi_chao = "Chào buổi chiều! Chúc bạn một buổi chiều vui vẻ.";
+        } else {
+            loi_chao = "Chào buổi tối! Bạn đi ngủ được rồi. Bye bạn!";
+        }
+
+        if (greetingEl) {
+            greetingEl.innerText = loi_chao;
+        }
+
+        const btndoi_mau = document.getElementById("btn-doi-mau");
+        const danh_sach_mau = [
+            { ten: "trang", ma: "#ffffff" },
+            { ten: "xanh", ma: "#dff7ff" },
+            { ten: "hong", ma: "#ffe4ec" },
+            { ten: "do", ma: "#ffd6d6" },
+            { ten: "vang", ma: "#fff5cc" },
+            { ten: "tim", ma: "#f0e6ff" },
+            { ten: "nau", ma: "#f2e1d7" }
+        ];
+        let vi_tri_mau = 0;
+
+        if (btndoi_mau) {
+            btndoi_mau.addEventListener("click", function () {
+                vi_tri_mau = (vi_tri_mau + 1) % danh_sach_mau.length;
+                const mau_hien_tai = danh_sach_mau[vi_tri_mau];
+                document.body.style.backgroundColor = mau_hien_tai.ma;
+            });
+        }
+    </script>
+</body>
+</html>
