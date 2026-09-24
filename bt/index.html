@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validate Form bằng JavaScript - Bình Minh</title>
+    <style>
+        :root {
+            --primary-red: #c8102e;
+            --primary-red-hover: #a50b23;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --bg-page: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --error-color: #ef4444;
+            --error-bg: #fef2f2;
+            --success-color: #10b981;
+            --btn-bg: #a7f3d0;
+            --btn-text: #065f46;
+            --btn-hover: #6ee7b7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 860px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        .rule-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .rule-card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rule-table th {
+            background-color: #ef4444;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 14px;
+        }
+
+        .rule-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .rule-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rule-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 14.5px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+            background: #ffffff;
+            color: var(--text-main);
+        }
+
+        .input-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .input-control.invalid {
+            border-color: var(--error-color) !important;
+            background-color: var(--error-bg);
+        }
+
+        .input-control.invalid:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+
+        .error-msg {
+            color: var(--error-color);
+            font-size: 12.5px;
+            margin-top: 5px;
+            min-height: 18px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .btn-submit {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: 1px solid #6ee7b7;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .note-text {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+
+        .success-banner {
+            display: none;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-top: 18px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="content-grid">
+            <section class="rule-card">
+                <h2>Bảng quy tắc Validation</h2>
+                <table class="rule-table">
+                    <thead>
+                        <tr>
+                            <th>Trường</th>
+                            <th>Quy tắc</th>
+                            <th>Thông báo lỗi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Họ tên</strong></td>
+                            <td>Bắt buộc, &ge; 3 ký tự</td>
+                            <td>Họ tên tối thiểu 3 ký tự</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td>Đúng định dạng</td>
+                            <td>Email không hợp lệ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SĐT</strong></td>
+                            <td>Đúng 10 chữ số</td>
+                            <td>SĐT phải gồm 10 số</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <main class="form-card">
+                <h2>Thông tin liên hệ</h2>
+                <form id="contact-form" novalidate>
+
+                    <div class="form-group">
+                        <label for="fullname">Họ tên</label>
+                        <input type="text" id="fullname" class="input-control" placeholder="Nhập họ và tên..."
+                            autocomplete="name">
+                        <span id="fullname-error" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="input-control"
+                            placeholder="Nhập email (ví dụ: minhdeptrai3396@gmail.com)..." autocomplete="email">
+                        <span id="email-error" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">SĐT</label>
+                        <input type="tel" id="phone" class="input-control" placeholder="Nhập số điện thoại 10 chữ số..."
+                            autocomplete="tel">
+                        <span id="phone-error" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit" id="submit-btn">Gửi</button>
+                        <span class="note-text">Lỗi thông tin không hợp lệ. Vui lòng gửi lại.</span>
+                    </div>
+
+
+                    <div id="success-banner" class="success-banner">
+                        Ahjhj! Gửi thông tin thành công! Dữ liệu hợp lệ.
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+
+    <script>
+        const form = document.querySelector("#contact-form");
+        const fullname = document.querySelector("#fullname");
+        const fullnameErr = document.querySelector("#fullname-error");
+
+        const email = document.querySelector("#email");
+        const emailErr = document.querySelector("#email-error");
+
+        const phone = document.querySelector("#phone");
+        const phoneErr = document.querySelector("#phone-error");
+
+        const successBanner = document.querySelector("#success-banner");
+
+        function validateFullName() {
+            const ok = fullname.value.trim().length >= 3;
+            fullnameErr.textContent = ok ? "" : "Họ tên tối thiểu 3 ký tự";
+            fullname.classList.toggle("invalid", !ok);
+            return ok;
+        }
+
+        function validateEmail() {
+            const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+            emailErr.textContent = ok ? "" : "Email không hợp lệ";
+            email.classList.toggle("invalid", !ok);
+            return ok;
+        }
+
+        function validatePhone() {
+            const ok = /^\d{10}$/.test(phone.value.trim());
+            phoneErr.textContent = ok ? "" : "SĐT phải gồm 10 số";
+            phone.classList.toggle("invalid", !ok);
+            return ok;
+        }
+
+        fullname.addEventListener("input", () => {
+            validateFullName();
+            successBanner.style.display = "none";
+        });
+
+        email.addEventListener("input", () => {
+            validateEmail();
+            successBanner.style.display = "none";
+        });
+
+        phone.addEventListener("input", () => {
+            validatePhone();
+            successBanner.style.display = "none";
+        });
+
+        form.addEventListener("submit", (e) => {
+            const isNameValid = validateFullName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+
+            if (!isNameValid || !isEmailValid || !isPhoneValid) {
+                e.preventDefault();
+                successBanner.style.display = "none";
+                return;
+            }
+
+            e.preventDefault();
+            successBanner.style.display = "block";
+        });
+    </script>
+</body>
+
+</html>
